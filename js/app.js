@@ -26,6 +26,7 @@ clockTime = workTime * 60, //represents starting time in seconds
 currentTime = clockTime,  //represent current time in seconds
 clockTimePaused = true,
 clockTimerEventId,
+clockFillEventId,
 clockPeriod = 'work',
 clockFace,
 clockFaceTime,
@@ -67,10 +68,11 @@ currentTime = clockTime;
 Fills the clock background-color with a gradient depending on
 % of total time elapsed
 */
-function setClockFill(fillColor, backColor){
+myClock.setClockFill = function(fillColor, backColor){
 if(!fillColor)  fillColor = '#C04B2E';
 if(!backColor)  backColor = clockBackColor;
-var fillPercent = (100/clockTime) * currentTime;
+var fillPercent = ( (100/ (clockTime) ) ) * currentTime;
+console.log('fill percent is:' + fillPercent);
 clockFace.css('background', 'linear-gradient(' + backColor + ' ' + fillPercent + '%, ' + fillColor + ' ' + fillPercent + '%)');
 }
 /*
@@ -87,7 +89,7 @@ if(currentTime === 2) {
 }
 currentTime -= 1;
 }
-setClockFill();
+myClock.setClockFill();
 clockFaceTime.text(formatClockTime(currentTime));
 clockTimerEventId = window.setTimeout(clockUpdate, 1000);
 }

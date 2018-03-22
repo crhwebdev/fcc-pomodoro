@@ -136,10 +136,10 @@ outline:0;
 }*/
 #clock {
 position: relative;
-width: 300px;
-height: 300px;
+width: 30vw;
+height: 30vw;
 border: 2px solid #C04B2E;
-border-radius: 300px;
+border-radius: 100%;
 box-shadow: 0px 10px 40px rgba(30, 9, 9, .6);
 background: linear-gradient(#1D3043 100%, green 100%);
 margin-left: auto;
