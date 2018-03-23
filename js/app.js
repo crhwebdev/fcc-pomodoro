@@ -2,23 +2,6 @@ var clock = (function(){
     
     var myClock = {};
 
-    /* 
-    workTimeInMinutes
-    breakTimeInMinutes 
-    currentModeStartTimeInMinutes
-
-    var clockTime = { 
-        clockDisplayTimeMinutes,
-        clockDisplayTimeSeconds,  
-        clockStartTimeInSeconds: currentModeStartTimeInMinutes * 60,  
-        clockCurrentTimeInSeconds: currentModeStartTimeInMinutes * 60,               
-        systemClockTimeStart: Date.now(),     
-        systemClockTimeCurrentTick: Date.now(),
-        systemClockTimePreviousTick: Date.now(),
-    }
-    
-    */
-   
     /////////////////////////////////////////////////////////////////////////////
     /*     CLOCK DISPLAY DEFAULTS                                              */
     ///////////////////////////////////////////////////////////////////////////// 
@@ -163,7 +146,8 @@ var clock = (function(){
 
     // Stops clock by clearing update fuction from setTimeout queue.
     function stopClock() {
-        window.clearTimeout(clockTimerEventId);
+        window.clearTimeout(clockTimerEventId);        
+        // window.cancelAnimationFrame(clockTimerEventId);
     }
 
     //Updates the clock time, plays an alarm with 2 seconds left, AND then switchs time
@@ -186,6 +170,7 @@ var clock = (function(){
         }
         setClockFill();
         clockTimerEventId = window.setTimeout(clockUpdate, 16);
+        // clockTimerEventId = window.requestAnimationFrame(clockUpdate);
     }
 
     
