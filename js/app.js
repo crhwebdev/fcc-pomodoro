@@ -235,6 +235,7 @@ stopClock();
 //reset time variables
 clockTime = workTime * 60;
 currentTime = clockTime;
+systemStartTime = systemCurrentTime = systemPreviousTime = Date.now();
 clockPeriod = 'work';
 
 //set clock face
