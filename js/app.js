@@ -96,8 +96,7 @@ var clock = (function(){
 
 
     //Starts and stops clock depending on current state
-    myClock.start = function () { 
-        
+    myClock.toggleTimer = function() {         
         if(!getIsClockTicking()){            
             startClock();
         } 
@@ -108,20 +107,21 @@ var clock = (function(){
 
     //resets clock time and stops clock ticks
     myClock.reset = function(){
-        if(!getIsClockStopped()){    
-            stopClock();
-            //reset display time variables
-            clockTime = workTime * 60;
-            currentTime = clockTime;
-            systemStartTime = systemCurrentTime = systemPreviousTime = Date.now();
-            clockPeriod = 'work';
+        // console.log('Clock Ticking: ' + getIsClockTicking() );
+        // console.log('Clock Paused: ' + getIsClockPaused() );
+        // console.log('Clock Stopped: ' + getIsClockStopped() );
+                
+        stopClock();
+        //reset display time variables
+        clockTime = workTime * 60;
+        currentTime = clockTime;
+        systemStartTime = systemCurrentTime = systemPreviousTime = Date.now();
+        clockPeriod = 'work';
 
-            //set clock face
-            clockFaceTime.text(formatClockTime(currentTime));
-            clockFaceLabel.text('Session');
-            setClockFill();
-        }
-
+        //set clock face
+        clockFaceTime.text(formatClockTime(currentTime));
+        clockFaceLabel.text('Session');
+        setClockFill();
     };
 
     /////////////////////////////////////////////////////////////////////////////
@@ -135,7 +135,7 @@ var clock = (function(){
         return clockTimePaused;
     }
 
-    function getIsClockStopped() {
+    function getIsClockStopped() {        
         return clockTimePaused || !clockTimeTicking;
     }
 
@@ -295,7 +295,7 @@ $("document").ready(function(){
 
     //event to handle pause/start on clock
     $('#clock').on('click', function(event){
-        clock.start('#clock #time');
+        clock.toggleTimer();
     });
 
     //events to handle incrementing/decrementing time on controls
