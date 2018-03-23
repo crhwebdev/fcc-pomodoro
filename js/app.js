@@ -270,7 +270,6 @@ var clock = (function(){
             clockFaceTime.text(formatClockTime(currentTime));
         }
     }
-
     
     return myClock; 
 })();
@@ -287,7 +286,7 @@ function buttonClick(buttonID){
 //Main application
 $("document").ready(function(){
 
-    clock.init('#clock', '#clock #time', '#clock #period', '#break-control .time', '#work-control .time');
+    clock.init('#clock', '#clock #time', '#clock #period', '#break-counter-display', '#work-counter-display');
 
     //event to handle pause/start on clock
     $('#clock').on('click', function(event){

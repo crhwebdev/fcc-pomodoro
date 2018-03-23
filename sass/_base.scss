@@ -1,0 +1,22 @@
+$color-primary: #1D3043;
+$color-secondary: #263F58;
+
+$color-red: #C04B2E;
+$color-green: green;
+$color-glass: #7CA0C4;
+
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;    
+}
+
+html {
+    font-size: 62.5%; //1 rem = 10px: 10px/16px = 62.5%   
+}
+
+body{    
+    box-sizing: border-box; 
+}
