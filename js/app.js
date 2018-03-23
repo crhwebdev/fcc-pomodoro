@@ -106,16 +106,13 @@ var clock = (function(){
     };
 
     //resets clock time and stops clock ticks
-    myClock.reset = function(){
-        // console.log('Clock Ticking: ' + getIsClockTicking() );
-        // console.log('Clock Paused: ' + getIsClockPaused() );
-        // console.log('Clock Stopped: ' + getIsClockStopped() );
-                
+    myClock.reset = function(){           
         stopClock();
         //reset display time variables
         clockTime = workTime * 60;
         currentTime = clockTime;
-        systemStartTime = systemCurrentTime = systemPreviousTime = Date.now();
+        // systemStartTime = systemCurrentTime = systemPreviousTime = Date.now();
+        resetSystemTime();
         clockPeriod = 'work';
 
         //set clock face
@@ -227,24 +224,19 @@ var clock = (function(){
     }
     
     //changes between work time and break time
-    function changeTimePeriod(){
-
-        // systemStartTime = Date.now();
-        // systemCurrentTime = systemStartTime;
-        // systemPreviousTime = systemStartTime;
+    function changeTimePeriod(){        
         resetSystemTime();
-
         if(clockPeriod === 'work'){
-        clockPeriod = 'break';
-        clockFaceLabel.text('Break');
-        clockTime = breakTime * 60;
-        currentTime = clockTime;
+            clockPeriod = 'break';
+            clockFaceLabel.text('Break');
+            clockTime = breakTime * 60;
+            currentTime = clockTime;
         }
         else{
-        clockPeriod = 'work';
-        clockFaceLabel.text('Session');
-        clockTime = workTime * 60;
-        currentTime = clockTime;
+            clockPeriod = 'work';
+            clockFaceLabel.text('Session');
+            clockTime = workTime * 60;
+            currentTime = clockTime;
         }
     }
 
@@ -256,7 +248,9 @@ var clock = (function(){
     // Updates break time
     function breakTimeUpdate(){
         controlBreakTime.text(breakTime);
-        if(clockPeriod === 'break'){ 
+        if(clockPeriod === 'break'){
+            resetSystemTime();
+            clockTimePaused = false;             
             clockTime = breakTime * 60;
             currentTime = clockTime;
             setClockFill();
@@ -268,6 +262,8 @@ var clock = (function(){
     function workTimeUpdate(){
         controlWorkTime.text(workTime);
         if(clockPeriod === 'work'){ 
+            resetSystemTime();
+            clockTimePaused = false;
             clockTime = workTime * 60;
             currentTime = clockTime;
             setClockFill();
