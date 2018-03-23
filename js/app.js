@@ -20,10 +20,13 @@ var myClock = {};
 var soundSetUp = false,
 soundSrc = 'audio/6de6332f09e1f5c02156eabd1272bfe1_Alarm01.ogg'; /*'https://ia801201.us.archive.org/24/items/6de6332f09e1f5c02156eabd1272bfe1Alarm01/6de6332f09e1f5c02156eabd1272bfe1_Alarm01.ogg'*/
 
-var workTime = 25,
-breakTime = 5,
+var workTime = 1,
+breakTime = 1,
 clockTime = workTime * 60, //represents starting time in seconds
 currentTime = clockTime,  //represent current time in seconds
+systemStartTime,
+systemCurrentTime,
+systemPreviousTime,
 clockTimePaused = true,
 clockTimerEventId,
 clockFillEventId,
@@ -34,6 +37,28 @@ clockFaceLabel,
 controlWorkTime,
 controlBreakTime,
 clockBackColor;
+
+
+
+/* 
+  
+  workTimeInMinutes
+  breakTimeInMinutes 
+  currentModeStartTimeInMinutes
+
+  var clockTime = { 
+    clockDisplayTimeMinutes,
+    clockDisplayTimeSeconds,  
+    clockStartTimeInSeconds: currentModeStartTimeInMinutes * 60,  
+    clockCurrentTimeInSeconds: currentModeStartTimeInMinutes * 60,               
+    systemClockTimeStart: Date.now(),     
+    systemClockTimeCurrentTick: Date.now(),
+    systemClockTimePreviousTick: Date.now(),
+  }
+  
+
+*/
+
 //variables to hold sound effects
 //var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 var fxAlarm = new Audio();
@@ -51,47 +76,61 @@ return minutes + ":" + seconds;
 
 //changes between work time and break time
 function changeTimePeriod(){
-if(clockPeriod === 'work'){
-clockPeriod = 'break';
-clockFaceLabel.text('Break');
-clockTime = breakTime * 60;
-currentTime = clockTime;
-}
-else{
-clockPeriod = 'work';
-clockFaceLabel.text('Session');
-clockTime = workTime * 60;
-currentTime = clockTime;
-}
+
+    systemStartTime = Date.now();
+    systemCurrentTime = systemStartTime;
+    systemPreviousTime = systemStartTime;
+
+    if(clockPeriod === 'work'){
+    clockPeriod = 'break';
+    clockFaceLabel.text('Break');
+    clockTime = breakTime * 60;
+    currentTime = clockTime;
+    }
+    else{
+    clockPeriod = 'work';
+    clockFaceLabel.text('Session');
+    clockTime = workTime * 60;
+    currentTime = clockTime;
+    }
 }
 /*
 Fills the clock background-color with a gradient depending on
 % of total time elapsed
 */
-myClock.setClockFill = function(fillColor, backColor){
-if(!fillColor)  fillColor = '#C04B2E';
-if(!backColor)  backColor = clockBackColor;
-var fillPercent = ( (100/ (clockTime) ) ) * currentTime;
-console.log('fill percent is:' + fillPercent);
-clockFace.css('background', 'linear-gradient(' + backColor + ' ' + fillPercent + '%, ' + fillColor + ' ' + fillPercent + '%)');
+function setClockFill(fillColor, backColor){
+    if(!fillColor)  fillColor = '#C04B2E';
+    if(!backColor)  backColor = clockBackColor;
+    var currentTimeInSeconds = clockTime - (( systemCurrentTime - systemStartTime) / 1000);
+    var fillPercent = ( (100/ (clockTime) ) ) * currentTimeInSeconds;
+    // var fillPercent = ( ( 100 / (systemStartTime) )  * ( (systemCurrentTime) ) );
+
+    // console.log('fill percent is:' + fillPercent + ' | current time in seconds: ' + currentTimeInSeconds);
+
+    clockFace.css('background', 'linear-gradient(' + backColor + ' ' + fillPercent + '%, ' + fillColor + ' ' + fillPercent + '%)');
 }
 /*
 Updates the clock time and plays an alarm with 2 seconds left, then switchs time
 mode to work/break
 */
 function clockUpdate( ){
-if(currentTime === 0){
-changeTimePeriod();
-}
-else{
-if(currentTime === 2) {
- fxAlarm.play();
-}
-currentTime -= 1;
-}
-myClock.setClockFill();
-clockFaceTime.text(formatClockTime(currentTime));
-clockTimerEventId = window.setTimeout(clockUpdate, 1000);
+    systemCurrentTime = Date.now();
+
+    if(currentTime === 0){
+        changeTimePeriod();
+    }
+    else if (currentTime === 2){        
+        fxAlarm.play();        
+    }
+
+    if ( (systemCurrentTime - systemPreviousTime) >= 1000){
+        systemPreviousTime = systemCurrentTime;	
+        currentTime -= 1;
+        clockFaceTime.text(formatClockTime(currentTime));
+    }
+
+    setClockFill();
+    clockTimerEventId = window.setTimeout(clockUpdate, 100);
 }
 
 /*
@@ -100,12 +139,17 @@ around issue with sound not starting on mobile devices without user interaction.
 */
 
 function startClock( ){
-if(!soundSetUp){
-fxAlarm.play();
-fxAlarm.src = soundSrc;
-soundSetUp = true;
-}
-clockUpdate( );
+
+    systemStartTime = Date.now();
+
+    if(!soundSetUp){
+        fxAlarm.play();
+        fxAlarm.src = soundSrc;
+        soundSetUp = true;
+    }
+        systemCurrentTime = Date.now();
+        systemPreviousTime = systemCurrentTime;
+        clockUpdate( );
 }
 
 // Stops clock by clearing update fuction from setTimeout queue.
