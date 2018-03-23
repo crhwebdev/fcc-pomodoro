@@ -1,3 +1,16 @@
+
+//shim for requestAnimationFrame
+if(window.requestAnimationFrame === undefined){
+    window.requestAnimationFrame = function requestAnimationFrame(fn){
+        return window.setTimeout(fn, 16);
+    }
+
+    window.cancelAnimationFrame = function cancelAnimationFrame(timeoutId){
+        return window.clearTimeout(timeoutId);
+    }
+}
+
+//clock application
 var clock = (function(){
     
     var myClock = {};
@@ -15,7 +28,8 @@ var clock = (function(){
     ///////////////////////////////////////////////////////////////////////////// 
     var soundSetUp = false;
     var soundSrc = 'audio/6de6332f09e1f5c02156eabd1272bfe1_Alarm01.ogg'; 
-    /*'https://ia801201.us.archive.org/24/items/6de6332f09e1f5c02156eabd1272bfe1Alarm01/6de6332f09e1f5c02156eabd1272bfe1_Alarm01.ogg'*/
+    var fxAlarm = new Audio();
+    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? true : false; 
 
     /////////////////////////////////////////////////////////////////////////////
     /*     CLOCK INTERFACE ELEMENTS                                            */
@@ -40,9 +54,6 @@ var clock = (function(){
     var clockFillEventId;
     var clockPeriod = 'work';
     
-    //variables to hold sound effects
-    var fxAlarm = new Audio();
-
     /////////////////////////////////////////////////////////////////////////////
     /*     CLOCK PUBLIC METHODS                                                */
     ///////////////////////////////////////////////////////////////////////////// 
@@ -139,17 +150,18 @@ var clock = (function(){
     //Starts the clock and also sets up fxAlarm to get
     //around issue with sound not starting on mobile devices without user interaction.
     function startClock( ){
-        if(getIsClockPaused()){            
-            console.log('unpaused clock');
+        if(getIsClockPaused()){                        
             systemCurrentTime = Date.now();
             systemStartTime += systemCurrentTime - systemPreviousTime;
             systemPreviousTime = systemCurrentTime;    
         } else {            
-            console.log('started clock');
             if(!soundSetUp){
-                fxAlarm.play();
+                if(isMobile){
+                    fxAlarm.play();
+                }                
                 fxAlarm.src = soundSrc;
                 soundSetUp = true;
+                               
             }
             resetSystemTime();
         }
@@ -296,7 +308,6 @@ $("document").ready(function(){
     //events to handle incrementing/decrementing time on controls
     $('.minus').on('click', function(event){
         var target = event.currentTarget.parentElement.id;
-        // console.log(event);
         if(target === 'break-control'){
             clock.minusBreakTime();
         }

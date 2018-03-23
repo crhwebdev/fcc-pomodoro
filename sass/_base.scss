@@ -5,6 +5,11 @@ $color-red: #C04B2E;
 $color-green: green;
 $color-glass: #7CA0C4;
 
+@mixin disableMobileTap{
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: transparent;
+}
+
 *,
 *::after,
 *::before {
