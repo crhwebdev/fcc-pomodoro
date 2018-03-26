@@ -37,7 +37,7 @@ body {
   margin-right: auto; }
   .clock__control-panel {
     position: relative;
-    min-width: 35rem;
+    min-width: 32rem;
     min-height: 16rem;
     width: 25vw;
     padding: 1.5rem 2rem;
