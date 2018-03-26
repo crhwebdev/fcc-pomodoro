@@ -18,8 +18,8 @@ var clock = (function(){
     /////////////////////////////////////////////////////////////////////////////
     /*     CLOCK DISPLAY DEFAULTS                                              */
     ///////////////////////////////////////////////////////////////////////////// 
-    var workTime = 1;
-    var breakTime = 1;
+    var workTime = 25;
+    var breakTime = 5;
     var clockBackColor = '#1D3043';
     var clockFillColor = '#C04B2E';
 
