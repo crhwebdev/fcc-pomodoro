@@ -23,7 +23,7 @@
     "compress:css": "node-sass dist/public/css/style.prefix.css dist/public/css/style.css --output-style compressed",
     "build:html": "htmlmin -o dist/index.html index.html",
     "build:css": "npm-run-all compile:sass prefix:css compress:css",
-    "build:js": "uglifyjs public/js/app.js -o dist/public/js/app.js -c -m"
+    "build:js": "uglifyjs public/js/app.js -o dist/public/js/app.js -c -m --source-map"
   },
   "author": "Carl Hain",
   "license": "MIT",
