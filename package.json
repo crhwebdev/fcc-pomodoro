@@ -9,13 +9,12 @@
   "homepage": "http://crhain.github.io/fcc-pomodoro",
   "scripts": {
     "build": "npm-run-all clean:dist make:dist build:html build:css build:js move:audio",
-    "start": "npm-run-all --parallel devserver watch:sass watch:js",
+    "start": "npm-run-all --parallel devserver watch:sass",
     "predeploy": "npm run build",
     "postdeploy": "npm run clean:dist",
     "deploy": "gh-pages -d dist",
     "devserver": "live-server",
     "watch:sass": "node-sass src/sass/main.scss public/css/style.css -w",
-    "watch:js": "watch -p \"src/js/*.js\" -c \"uglifyjs src/js/app.js -o public/js/app.min.js -c -m --source-map \"url='src/js/app.js'\" \"",
     "clean:dist": "rimraf dist -rf",
     "make:dist": "mkdirp dist/public/css dist/public/js",
     "move:audio": "ncp public/audio dist/public/audio",
@@ -24,7 +23,7 @@
     "compress:css": "node-sass dist/public/css/style.prefix.css dist/public/css/style.css --output-style compressed",
     "build:html": "htmlmin -o dist/index.html index.html",
     "build:css": "npm-run-all compile:sass prefix:css compress:css",
-    "build:js": "uglifyjs src/js/app.js -o dist/public/js/app.min.js -c -m --source-map"
+    "build:js": "uglifyjs public/js/app.js -o dist/public/js/app.js -c -m"
   },
   "author": "Carl Hain",
   "license": "MIT",

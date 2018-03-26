@@ -12,7 +12,7 @@ if(window.requestAnimationFrame === undefined){
 
 //clock application
 var clock = (function(){
-
+    
     var myClock = {};
 
     /////////////////////////////////////////////////////////////////////////////
