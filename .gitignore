@@ -1,4 +1,3 @@
 node_modules
+dist
 docs/private
-css/archive
-js/archive

@@ -7,25 +7,42 @@
     "doc": "docs"
   },
   "scripts": {
-    "watch:sass": "node-sass sass/main.scss css/style.css -w",
+    "build": "npm-run-all clean:dist make:dist build:html build:css build:js move:audio",
+    "start": "npm-run-all --parallel devserver watch:sass watch:js",
+    "predeploy": "npm run build",
+    "postdeploy": "npm run clean:dist",
+    "deploy": "gh-pages -d dist",
     "devserver": "live-server",
-    "start": "npm-run-all --parallel devserver watch:sass",
-    "compile:sass": "node-sass sass/main.scss css/style.comp.css",
-    "prefix:css": "postcss css/style.comp.css --use autoprefixer -o css/style.prefix.css",
-    "compress:css": "node-sass css/style.prefix.css css/style.css --output-style compressed",
+    "watch:sass": "node-sass src/sass/main.scss public/css/style.css -w",
+    "watch:js": "watch -p \"src/js/*.js\" -c \"uglifyjs src/js/app.js -c -m > public/js/app.min.js\"",
+    "clean:dist": "rimraf dist -rf",
+    "make:dist": "mkdirp dist/public/css dist/public/js",
+    "move:audio": "ncp public/audio dist/public/audio",
+    "compile:sass": "node-sass src/sass/main.scss dist/public/css/style.comp.css",
+    "prefix:css": "postcss dist/public/css/style.comp.css --use autoprefixer -o dist/public/css/style.prefix.css",
+    "compress:css": "node-sass dist/public/css/style.prefix.css dist/public/css/style.css --output-style compressed",
+    "build:html": "htmlmin -o dist/index.html index.html",
     "build:css": "npm-run-all compile:sass prefix:css compress:css",
-    "build:js": "uglifyjs js/app.js -c -m -o js/app.min.js",
-    "build": "npm-run-all build:css build:js"
+    "build:js": "uglifyjs src/js/app.js -c -m > dist/public/js/app.min.js"
   },
   "author": "Carl Hain",
   "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^8.2.0",
     "concat": "^1.0.3",
+    "gh-pages": "^1.1.0",
+    "html-minifier": "^3.5.12",
+    "html-minifier-cli": "^0.1.0",
     "live-server": "^1.2.0",
+    "mkdirp": "^0.5.1",
+    "ncp": "^2.0.0",
     "node-sass": "^4.7.2",
     "npm-run-all": "^4.1.2",
     "postcss-cli": "^5.0.0",
-    "uglify-js": "^3.3.16"
-  }
+    "rimraf": "^2.6.2",
+    "uglify-js": "^3.3.16",
+    "watch": "^1.0.2",
+    "watch-cli": "^0.2.3"
+  },
+  "dependencies": {}
 }
