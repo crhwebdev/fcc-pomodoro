@@ -6,6 +6,7 @@
   "directories": {
     "doc": "docs"
   },
+  "homepage": "http://crhain.github.io/fcc-pomodoro",
   "scripts": {
     "build": "npm-run-all clean:dist make:dist build:html build:css build:js move:audio",
     "start": "npm-run-all --parallel devserver watch:sass watch:js",
