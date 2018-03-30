@@ -43,8 +43,8 @@ var clock = (function(){
     /////////////////////////////////////////////////////////////////////////////
     /*     CLOCK STATE                                                         */
     ///////////////////////////////////////////////////////////////////////////// 
-    var clockTime = workTime * 60; //represents starting time in seconds
-    var currentTime = clockTime;  //represent current time in seconds
+    var clockStartTimeInSeconds = workTime * 60; //represents starting time in seconds
+    var currentTime = clockStartTimeInSeconds;  //represent current time in seconds
     var systemStartTime;
     var systemCurrentTime;
     var systemPreviousTime;
@@ -58,7 +58,7 @@ var clock = (function(){
     /*     CLOCK PUBLIC METHODS                                                */
     ///////////////////////////////////////////////////////////////////////////// 
  
-    //intialize clock with id for clockTime, clockLabel, controlWorkTime, 
+    //intialize clock with id for clockStartTimeInSeconds, clockLabel, controlWorkTime, 
     //and controlBreakTime
     myClock.init = function( ){
         clockFace = $(arguments[0]);
@@ -72,6 +72,67 @@ var clock = (function(){
         controlBreakTime.text(breakTime);
         clockBackColor = clockFace.css('background-color');
     }
+
+    //Starts the clock and also sets up fxAlarm to get
+    //around issue with sound not starting on mobile devices without user interaction.
+    myClock.start = function(){
+        if(getIsClockPaused()){                        
+            systemCurrentTime = Date.now();
+            systemStartTime += systemCurrentTime - systemPreviousTime;
+            systemPreviousTime = systemCurrentTime;    
+        } else {            
+            if(!soundSetUp){
+                if(isMobile){
+                    fxAlarm.play();
+                }                
+                fxAlarm.src = soundSrc;
+                soundSetUp = true;
+                               
+            }
+            resetSystemTime();
+        }
+
+        clockTimePaused = false
+        clockTimeTicking = true;
+    
+        clockUpdate();                                            
+    }
+
+    // Stops clock by clearing update fuction from setTimeout queue.
+    myClock.stop = function () {
+        clockTimePaused = false;
+        clockTimeTicking = false;
+        resetSystemTime();
+        // window.clearTimeout(clockTimerEventId);        
+        window.cancelAnimationFrame(clockTimerEventId);
+    }
+
+    myClock.pause = function () {
+        if(clockTimeTicking && !clockTimePaused){
+            clockTimePaused = true;
+            clockTimeTicking = false;
+            systemPreviousTime = Date.now();
+            // window.clearTimeout(clockTimerEventId);        
+            window.cancelAnimationFrame(clockTimerEventId);
+        }        
+    }
+
+    //resets clock time and stops clock ticks
+    myClock.reset = function(){           
+        this.stop();
+        //reset display time variables
+        clockStartTimeInSeconds = workTime * 60;
+        currentTime = clockStartTimeInSeconds;
+        // systemStartTime = systemCurrentTime = systemPreviousTime = Date.now();
+        resetSystemTime();
+        clockPeriod = 'work';
+
+        //set clock face
+        clockFaceTime.text(formatClockTime(currentTime));
+        clockFaceLabel.text('Session');
+        setClockFill();
+    };
+
 
     //increase clock's work time
     myClock.addWorkTime = function ( ) {
@@ -109,27 +170,11 @@ var clock = (function(){
     //Starts and stops clock depending on current state
     myClock.toggleTimer = function() {         
         if(!getIsClockTicking()){            
-            startClock();
+            this.start();
         } 
         else  {              
-            pauseClock();
+            this.pause();
         }
-    };
-
-    //resets clock time and stops clock ticks
-    myClock.reset = function(){           
-        stopClock();
-        //reset display time variables
-        clockTime = workTime * 60;
-        currentTime = clockTime;
-        // systemStartTime = systemCurrentTime = systemPreviousTime = Date.now();
-        resetSystemTime();
-        clockPeriod = 'work';
-
-        //set clock face
-        clockFaceTime.text(formatClockTime(currentTime));
-        clockFaceLabel.text('Session');
-        setClockFill();
     };
 
     /////////////////////////////////////////////////////////////////////////////
@@ -145,48 +190,6 @@ var clock = (function(){
 
     function getIsClockStopped() {        
         return clockTimePaused || !clockTimeTicking;
-    }
-
-    //Starts the clock and also sets up fxAlarm to get
-    //around issue with sound not starting on mobile devices without user interaction.
-    function startClock( ){
-        if(getIsClockPaused()){                        
-            systemCurrentTime = Date.now();
-            systemStartTime += systemCurrentTime - systemPreviousTime;
-            systemPreviousTime = systemCurrentTime;    
-        } else {            
-            if(!soundSetUp){
-                if(isMobile){
-                    fxAlarm.play();
-                }                
-                fxAlarm.src = soundSrc;
-                soundSetUp = true;
-                               
-            }
-            resetSystemTime();
-        }
-
-        clockTimePaused = false
-        clockTimeTicking = true;
-    
-        clockUpdate();                                            
-    }
-
-    // Stops clock by clearing update fuction from setTimeout queue.
-    function stopClock() {
-        clockTimePaused = false;
-        clockTimeTicking = false;
-        resetSystemTime();
-        // window.clearTimeout(clockTimerEventId);        
-        window.cancelAnimationFrame(clockTimerEventId);
-    }
-
-    function pauseClock() {
-        clockTimePaused = true;
-        clockTimeTicking = false;
-        systemPreviousTime = Date.now();
-        // window.clearTimeout(clockTimerEventId);        
-        window.cancelAnimationFrame(clockTimerEventId);
     }
 
     //Updates the clock time, plays an alarm with 2 seconds left, AND then switchs time
@@ -212,19 +215,17 @@ var clock = (function(){
         clockTimerEventId = window.requestAnimationFrame(clockUpdate);
     }
 
-    
     /*
     Fills the clock background-color with a gradient depending on
     % of total time elapsed
     */
     function setClockFill(){
-        var currentTimeRemainingInSeconds = clockTime - (( systemCurrentTime - systemStartTime) / 1000);        
-        // percent filled is currentTimeRemainingInSeconds / total clockTime in seconds.  Then multiply by 100 to convert from fraction to percent
-        var fillPercent = ((currentTimeRemainingInSeconds / clockTime) * 100);        
+        var currentTimeRemainingInSeconds = clockStartTimeInSeconds - (( systemCurrentTime - systemStartTime) / 1000);        
+        // percent filled is currentTimeRemainingInSeconds / total clockStartTimeInSeconds in seconds.  Then multiply by 100 to convert from fraction to percent
+        var fillPercent = ((currentTimeRemainingInSeconds / clockStartTimeInSeconds) * 100);        
         clockFace.css('background', 'linear-gradient(' + clockBackColor + ' ' + fillPercent + '%, ' + clockFillColor + ' ' + fillPercent + '%)');
     }
-    
-    
+     
     //formats time from total seconds to minutes:seconds format
     function formatClockTime(time){
         var minutes = Math.floor(time / 60);
@@ -242,14 +243,14 @@ var clock = (function(){
         if(clockPeriod === 'work'){
             clockPeriod = 'break';
             clockFaceLabel.text('Break');
-            clockTime = breakTime * 60;
-            currentTime = clockTime;
+            clockStartTimeInSeconds = breakTime * 60;
+            currentTime = clockStartTimeInSeconds;
         }
         else{
             clockPeriod = 'work';
             clockFaceLabel.text('Session');
-            clockTime = workTime * 60;
-            currentTime = clockTime;
+            clockStartTimeInSeconds = workTime * 60;
+            currentTime = clockStartTimeInSeconds;
         }
     }
 
@@ -264,8 +265,8 @@ var clock = (function(){
         if(clockPeriod === 'break'){
             resetSystemTime();
             clockTimePaused = false;             
-            clockTime = breakTime * 60;
-            currentTime = clockTime;
+            clockStartTimeInSeconds = breakTime * 60;
+            currentTime = clockStartTimeInSeconds;
             setClockFill();
             clockFaceTime.text(formatClockTime(currentTime));
         }
@@ -277,8 +278,8 @@ var clock = (function(){
         if(clockPeriod === 'work'){ 
             resetSystemTime();
             clockTimePaused = false;
-            clockTime = workTime * 60;
-            currentTime = clockTime;
+            clockStartTimeInSeconds = workTime * 60;
+            currentTime = clockStartTimeInSeconds;
             setClockFill();
             clockFaceTime.text(formatClockTime(currentTime));
         }
@@ -297,9 +298,20 @@ function buttonClick(buttonID){
 }
 
 //Main application
-$("document").ready(function(){
+$(document).ready(function(){
 
     clock.init('#clock', '#clock #time', '#clock #period', '#break-counter-display', '#work-counter-display');
+
+    // $(window).blur(function(event){
+    //     console.log("lost focus!");
+    //     clock.pause();
+    // });
+    
+    $(document).on("visibilitychange", function(event){
+        if(this.hidden){
+            clock.pause();            
+        }        
+    });
 
     //event to handle pause/start on clock
     $('#clock').on('click', function(event){
