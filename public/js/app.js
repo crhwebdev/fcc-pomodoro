@@ -218,8 +218,9 @@ var clock = (function(){
     % of total time elapsed
     */
     function setClockFill(){
-        var currentTimeInSeconds = clockTime - (( systemCurrentTime - systemStartTime) / 1000);
-        var fillPercent = ( (100/ (clockTime) ) ) * currentTimeInSeconds;        
+        var currentTimeRemainingInSeconds = clockTime - (( systemCurrentTime - systemStartTime) / 1000);        
+        // percent filled is currentTimeRemainingInSeconds / total clockTime in seconds.  Then multiply by 100 to convert from fraction to percent
+        var fillPercent = ((currentTimeRemainingInSeconds / clockTime) * 100);        
         clockFace.css('background', 'linear-gradient(' + clockBackColor + ' ' + fillPercent + '%, ' + clockFillColor + ' ' + fillPercent + '%)');
     }
     

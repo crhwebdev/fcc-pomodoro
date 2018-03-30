@@ -8,11 +8,11 @@
   },
   "homepage": "http://crhain.github.io/fcc-pomodoro",
   "scripts": {
-    "build": "npm-run-all clean:dist make:dist build:html build:css build:js move:audio",
     "start": "npm-run-all --parallel devserver watch:sass",
+    "deploy": "gh-pages -d dist",
     "predeploy": "npm run build",
     "postdeploy": "npm run clean:dist",
-    "deploy": "gh-pages -d dist",
+    "build": "npm-run-all clean:dist make:dist build:html build:css build:js move:audio",
     "devserver": "live-server",
     "watch:sass": "node-sass src/sass/main.scss public/css/style.css -w",
     "clean:dist": "rimraf dist -rf",
