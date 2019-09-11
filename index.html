@@ -1,51 +1,57 @@
 <!DOCTYPE html>
-<html >
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>freeCodeCamp:PomodoroClock</title>
-  <link href="https://fonts.googleapis.com/css?family=Cabin+Sketch|Lato" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="public/css/style.css">
-  <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
-</head>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>freeCodeCamp:PomodoroClock</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Cabin+Sketch|Lato"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="public/css/style.css" />
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  </head>
 
-<body translate="no" >
-  <header>
-    <h1>Tomato Clock</h1>
-    <h3>(Italians say Pomodoro)</h3>
-  </header>
-  <div class="clock">
-    <div class="clock__control-panel">
-
-      <div class="clock__control-counter counter">
-        <div class="counter__label">BREAK LENGTH</div>
-        <div id="break-control" class="counter__control">
-          <button id="break-minus" class="counter__control-btn minus">-</button>
-          <div id="break-counter-display" class="counter__display"></div>
-          <button id="break-plus" class="counter__control-btn plus">+</button>
+  <body translate="no">
+    <header>
+      <h1>Tomato Clock</h1>
+      <h3>(Italians say Pomodoro)</h3>
+    </header>
+    <div class="clock">
+      <div class="clock__control-panel">
+        <div class="clock__control-counter counter">
+          <div class="counter__label">BREAK LENGTH</div>
+          <div id="break-control" class="counter__control">
+            <button id="break-minus" class="counter__control-btn minus">
+              -
+            </button>
+            <div id="break-counter-display" class="counter__display"></div>
+            <button id="break-plus" class="counter__control-btn plus">+</button>
+          </div>
         </div>
-      </div>
 
-      <div class="clock__control-counter counter">
-        <div class="counter__label">SESSION LENGTH</div>
-        <div id="work-control" class="counter__control">
-          <button id="work-minus" class="counter__control-btn minus">-</button>
-           <div id="work-counter-display" class="counter__display"></div>
-          <button id="work-plus" class="counter__control-btn plus">+</button>
+        <div class="clock__control-counter counter">
+          <div class="counter__label">SESSION LENGTH</div>
+          <div id="work-control" class="counter__control">
+            <button id="work-minus" class="counter__control-btn minus">
+              -
+            </button>
+            <div id="work-counter-display" class="counter__display"></div>
+            <button id="work-plus" class="counter__control-btn plus">+</button>
+          </div>
         </div>
+
+        <button id="reset" class="clock__control-reset btn-full">RESET</button>
       </div>
-
-      <button id="reset" class="clock__control-reset btn-full">RESET</button>
+      <div id="clock" class="clock__face">
+        <div id="period" class="clock__face-label"></div>
+        <div id="time" class="clock__face-label"></div>
+      </div>
+      <footer><p>App By Carl Hain</p></footer>
     </div>
-    <div id="clock" class="clock__face">
-      <div id="period" class="clock__face-label"></div>
-      <div id="time" class="clock__face-label"></div>
-    </div>
-    <footer><p>App By Carl Hain</p></footer>
-  </div>
 
-  <!-- <script type="text/javascript" src="js/app.js"></script> -->
-  <script type="text/javascript" src="public/js/app.js"></script>
-</body>
+    <!-- <script type="text/javascript" src="js/app.js"></script> -->
+    <script type="text/javascript" src="public/js/app.js"></script>
+  </body>
 </html>
