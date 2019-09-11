@@ -13,17 +13,21 @@ body {
 
 body {
   color: white;
-  font-family: "Lato", sans-serif; }
+  font-family: 'Lato', sans-serif; }
 
 header {
   /*background-color: gray;*/
-  color: #C04B2E;
-  font-family: "Cabin Sketch", cursive;
+  color: #c04b2e;
+  font-family: 'Cabin Sketch', cursive;
   text-align: center; }
   header h1 {
     font-size: 6rem; }
   header h3 {
     font-size: 2.5rem; }
+
+footer {
+  margin-top: 2rem;
+  font-size: 1.2rem; }
 
 body {
   background-color: #1D3043; }
@@ -51,7 +55,7 @@ body {
     left: 50%;
     transform: translateX(-50%);
     margin: 2rem 0;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-tap-highlight-color: transparent; }
   .clock__face {
     position: relative;
@@ -65,7 +69,7 @@ body {
     background: linear-gradient(#1D3043 100%, green 100%);
     margin-left: auto;
     margin-right: auto;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-tap-highlight-color: transparent; }
     .clock__face-label {
       position: relative;
@@ -101,7 +105,7 @@ body {
     /*#3E678D;*/
     border: 1px solid black;
     border-radius: 2px;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-tap-highlight-color: transparent; }
   .counter__display {
     width: 3rem;
